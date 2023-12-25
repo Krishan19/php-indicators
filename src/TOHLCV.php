@@ -5,25 +5,35 @@ namespace Doxadoxa\PhpIndicators;
 
 use Exception;
 
-class OHLVC
+class TOHLCV
 {
+    private $timestamp;
     private $open;
     private $high;
     private $low;
-    private $volume;
     private $close;
+    private $volume;
 
     private $indicators;
 
     public function __construct( array $candles )
     {
-        $this->open = new ArrayIndicator( array_column( $candles, 'open' ) );
-        $this->high = new ArrayIndicator( array_column( $candles, 'high' ) );
-        $this->low = new ArrayIndicator( array_column( $candles, 'low' ) );
-        $this->volume = new ArrayIndicator( array_column( $candles, 'volume' ) );
-        $this->close = new ArrayIndicator( array_column( $candles, 'close' ) );
+        $this->timestamp = new ArrayIndicator( array_column( $candles, 0 ) );
+        $this->open = new ArrayIndicator( array_column( $candles, 1 ) );
+        $this->high = new ArrayIndicator( array_column( $candles, 2 ) );
+        $this->low = new ArrayIndicator( array_column( $candles, 3 ) );
+        $this->close = new ArrayIndicator( array_column( $candles, 4 ) );
+        $this->volume = new ArrayIndicator( array_column( $candles, 5 ) );
 
         $this->indicators = new Indicators();
+    }
+
+    /**
+     * @return ArrayIndicator
+     */
+    public function timestamp(): ArrayIndicator
+    {
+        return $this->timestamp;
     }
 
     /**
@@ -53,17 +63,17 @@ class OHLVC
     /**
      * @return ArrayIndicator
      */
-    public function volume(): ArrayIndicator
+    public function close(): ArrayIndicator
     {
-        return $this->volume;
+        return $this->close;
     }
 
     /**
      * @return ArrayIndicator
      */
-    public function close(): ArrayIndicator
+    public function volume(): ArrayIndicator
     {
-        return $this->close;
+        return $this->volume;
     }
 
     /**
@@ -140,15 +150,15 @@ class OHLVC
      * @param callable $callback
      * @return ArrayIndicator
      */
-    public function mapOHLVC( callable $callback ): ArrayIndicator
+    public function mapOHLCV( callable $callback ): ArrayIndicator
     {
         return new ArrayIndicator(
             array_map( $callback,
                 $this->open->toArray(),
                 $this->high->toArray(),
                 $this->low->toArray(),
+                $this->close->toArray(),
                 $this->volume->toArray(),
-                $this->close->toArray()
             )
         );
     }
