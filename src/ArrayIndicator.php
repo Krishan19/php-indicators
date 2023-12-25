@@ -225,6 +225,11 @@ class ArrayIndicator implements Indicator, ArrayAccess
         return $this->indicators->ema( $this, $period );
     }
 
+    public function rsi( int $period ): ArrayIndicator
+    {
+        return $this->indicators->rsi( $this, $period );
+    }
+
     /**
      * Whether a offset exists
      * @link https://php.net/manual/en/arrayaccess.offsetexists.php
